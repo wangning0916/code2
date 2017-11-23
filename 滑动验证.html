@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		#slider{width: 100%;height: 40px;line-height: 40px;background-color: #ddd;position: relative;}
+		#sliderBg{width: 0px;height: 40px;background-color: #7AC23C;}
+		#sliderBar{width:45px;position:absolute;left:0;top:0;z-index: 99;height:38px;line-height:38px;border:1px solid #cccccc;background:#fff;z-index:3;cursor:move;text-align:center;user-select:none;-moz-user-select:none;-webkit-user-select:none;}
+		#textTip{position:absolute;left:0;width:100%;height:100%;line-height:40px;color:#999;text-align:center;font-family:'Microsoft Yahei';user-select:none;-moz-user-select:none;-webkit-user-select:none;}
+	</style>
+</head>
+<body>
+	<div style="width:300px;margin:0px auto;">
+		<div id="slider">
+			<div id="textTip">拖动滑块验证</div>
+			<div id="sliderBg" style="width: 0px;"></div>
+			<div id="sliderBar" style="left: 0px;">&gt;&gt;</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+<script type="text/javascript">
+	var ifCheck = false;
+	var ifClick = false;
+	var pageX , pageY , left , top;
+	var width = $("#slider").width() - $("#sliderBar").width();
+	$("#sliderBar").mousedown(function(event) {
+		ifClick = true;
+		pageX = event.pageX;
+		pageY = event.pageY;
+
+	});
+	$("#sliderBar").mousemove(function(event) {
+		if(ifClick){
+			left = event.pageX - pageX;
+			top = event.pageY - pageY;
+			if(left >= width){
+				left = width;
+				ifClick = false;
+				$(this).unbind('mousedown');
+				$("#textTip").text("验证成功").css('color', '#fff');
+				ifCheck = true;
+			}
+			if(left < 0){
+				left = 0;
+				ifClick = false;
+			}
+			$(this).css({'left':left,"top":0});
+			$("#sliderBg").width(left);
+		}
+	});
+
+	$("#sliderBar").mouseup(function(event) {
+		if(left < width - 50){
+			left = 0;
+		}else{
+			left = width;
+			$(this).unbind('mousedown');
+			$("#textTip").text("验证成功").css('color', '#fff');
+			ifCheck = true;
+		}
+		$(this).css('left',left);
+		$("#sliderBg").width(left);
+		ifClick = false;
+	});
+</script>
